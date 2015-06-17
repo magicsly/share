@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.share.dao.share_userMapper" >
+  <resultMap id="BaseResultMap" type="com.share.model.share_user" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="info" property="info" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="lev" property="lev" jdbcType="TINYINT" />
+    <result column="creatime" property="creatime" jdbcType="TIMESTAMP" />
+    <result column="logintime" property="logintime" jdbcType="TIMESTAMP" />
+    <result column="loginip" property="loginip" jdbcType="VARCHAR" />
+    <result column="isok" property="isok" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uid, uname, sex, info, email, mobile, password, image, lev, creatime, logintime, 
+    loginip, isok
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from share_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.share.model.share_user" >
+    insert into share_user (uid, uname, sex, 
+      info, email, mobile, 
+      password, image, lev, 
+      creatime, logintime, loginip, 
+      isok)
+    values (#{uid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, 
+      #{info,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{lev,jdbcType=TINYINT}, 
+      #{creatime,jdbcType=TIMESTAMP}, #{logintime,jdbcType=TIMESTAMP}, #{loginip,jdbcType=VARCHAR}, 
+      #{isok,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.share.model.share_user" >
+    insert into share_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="uname != null" >
+        uname,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="info != null" >
+        info,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="lev != null" >
+        lev,
+      </if>
+      <if test="creatime != null" >
+        creatime,
+      </if>
+      <if test="logintime != null" >
+        logintime,
+      </if>
+      <if test="loginip != null" >
+        loginip,
+      </if>
+      <if test="isok != null" >
+        isok,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="uname != null" >
+        #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="lev != null" >
+        #{lev,jdbcType=TINYINT},
+      </if>
+      <if test="creatime != null" >
+        #{creatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginip != null" >
+        #{loginip,jdbcType=VARCHAR},
+      </if>
+      <if test="isok != null" >
+        #{isok,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.share.model.share_user" >
+    update share_user
+    <set >
+      <if test="uname != null" >
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="info != null" >
+        info = #{info,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="lev != null" >
+        lev = #{lev,jdbcType=TINYINT},
+      </if>
+      <if test="creatime != null" >
+        creatime = #{creatime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logintime != null" >
+        logintime = #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginip != null" >
+        loginip = #{loginip,jdbcType=VARCHAR},
+      </if>
+      <if test="isok != null" >
+        isok = #{isok,jdbcType=TINYINT},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.share.model.share_user" >
+    update share_user
+    set uname = #{uname,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      info = #{info,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      image = #{image,jdbcType=VARCHAR},
+      lev = #{lev,jdbcType=TINYINT},
+      creatime = #{creatime,jdbcType=TIMESTAMP},
+      logintime = #{logintime,jdbcType=TIMESTAMP},
+      loginip = #{loginip,jdbcType=VARCHAR},
+      isok = #{isok,jdbcType=TINYINT}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>

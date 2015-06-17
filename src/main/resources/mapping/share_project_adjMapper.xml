@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.share.dao.share_project_adjMapper" >
+  <resultMap id="BaseResultMap" type="com.share.model.share_project_adj" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="pi_id" property="piId" jdbcType="INTEGER" />
+    <result column="buymuch" property="buymuch" jdbcType="REAL" />
+    <result column="buymoney" property="buymoney" jdbcType="REAL" />
+    <result column="buytime" property="buytime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="suretime" property="suretime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="com.share.model.share_project_adj" >
+    insert into share_project_adj (id, pi_id, buymuch, 
+      buymoney, buytime, updatetime, 
+      suretime, type)
+    values (#{id,jdbcType=INTEGER}, #{piId,jdbcType=INTEGER}, #{buymuch,jdbcType=REAL}, 
+      #{buymoney,jdbcType=REAL}, #{buytime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{suretime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.share.model.share_project_adj" >
+    insert into share_project_adj
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="piId != null" >
+        pi_id,
+      </if>
+      <if test="buymuch != null" >
+        buymuch,
+      </if>
+      <if test="buymoney != null" >
+        buymoney,
+      </if>
+      <if test="buytime != null" >
+        buytime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="suretime != null" >
+        suretime,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="piId != null" >
+        #{piId,jdbcType=INTEGER},
+      </if>
+      <if test="buymuch != null" >
+        #{buymuch,jdbcType=REAL},
+      </if>
+      <if test="buymoney != null" >
+        #{buymoney,jdbcType=REAL},
+      </if>
+      <if test="buytime != null" >
+        #{buytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suretime != null" >
+        #{suretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

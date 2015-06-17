@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--<settings>-->
+    <!--<setting name="defaultExecutorType" value="BATCH"/>-->
+    <!--</settings>-->
+
+    <!--别名-->
+    <typeAliases>
+
+    </typeAliases>
+    <!--<plugins>-->
+        <!--<plugin interceptor="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">-->
+            <!--<property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.SQLServer2005Dialect"/>-->
+        <!--</plugin>-->
+    <!--</plugins>-->
+    <!--配置文件-->
+    <!--<mappers>-->
+        <!--<mapper resource="mapping/share_userMapper.xml"/>-->
+        <!--<mapper resource="mapping/zstCqpkMapping.xml"/>-->
+        <!--<mapper resource="mapping/zstCqpkYlMapping.xml"/>-->
+        <!--<mapper resource="mapper/Expectmapper.xml"/>-->
+        <!--<mapper resource="mapper/CoopTaskcontrolmapper.xml"/>-->
+        <!--<mapper resource="mapper/cooptaskchannel.xml"/>-->
+        <!--<mapper resource="mapper/Zcprojectmapper.xml"/>-->
+        <!--<package name="com/springapp/mapper/*.xml"/>-->
+    <!--</mappers>-->
+</configuration>
