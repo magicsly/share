@@ -16,4 +16,6 @@ public interface share_userMapper {
     int updateByPrimaryKeySelective(share_user record);
 
     int updateByPrimaryKey(share_user record);
+
+    int userlogin (share_user record);
 }

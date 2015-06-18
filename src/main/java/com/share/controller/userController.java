@@ -65,9 +65,42 @@ public class userController {
 
     @RequestMapping(value = "/login")
     @ResponseBody
-    public Map login() {
-
+    public Map login(@RequestParam(value="uname",defaultValue = "",required=false) String uname,
+                     @RequestParam(value="password",defaultValue = "",required=false) String password
+                    ){
+        share_user share_user = new share_user();
+        share_user.setUname(uname);
+        share_user.setPassword(password);
+        Integer code = share_userService.login(share_user);
         Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code",code);
+        return map;
+    }
+
+    @RequestMapping(value = "/edituser")
+    @ResponseBody
+    public Map edituser(@RequestParam(value="uid",defaultValue = "",required=false) Integer uid,
+                        @RequestParam(value= "sex",defaultValue = "0",required=false) Byte sex,
+                        @RequestParam(value="info",defaultValue = "",required=false) String info,
+                        @RequestParam(value="email",defaultValue = "",required=false) String email,
+                        @RequestParam(value="mobile",defaultValue = "",required=false) String mobile,
+                        @RequestParam(value="image",defaultValue = "",required=false) String image,
+                        @RequestParam(value="level",defaultValue = "0",required=false) Byte level
+    ) {
+
+        share_user share_user = new share_user();
+        share_user.setUid(uid);
+        share_user.setSex(sex);
+        share_user.setInfo(info);
+        share_user.setEmail(email);
+        share_user.setImage(image);
+        share_user.setLev(level);
+        share_user.setMobile(mobile);
+        share_user.setIsok((byte) 0);
+        Integer code = share_userService.editUser(share_user);
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code",code);
+        map.put("msg",share_userService.userMsg(code));
         return map;
     }
 

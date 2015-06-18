@@ -45,10 +45,12 @@ public class share_userService {
 
     public Integer login(share_user user){
         try {
-            Integer code = 0;
-
-
-            return code;
+            Integer count = share_userMapper.userlogin(user);
+            if(count>0){
+                return 0;
+            }else {
+                return 1;
+            }
         }catch (Exception e){
             return -1;
         }
