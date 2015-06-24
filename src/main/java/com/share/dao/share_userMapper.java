@@ -18,4 +18,6 @@ public interface share_userMapper {
     int updateByPrimaryKey(share_user record);
 
     int userlogin (share_user record);
+
+    int isuser (String uname);
 }

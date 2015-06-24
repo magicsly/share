@@ -104,6 +104,14 @@ public class userController {
         return map;
     }
 
+    @RequestMapping(value = "/userinfo")
+    @ResponseBody
+    public Map userinfo(@RequestParam(value="uid",defaultValue = "",required=false) Integer uid) {
+        Map<String,Object> map = new HashMap<String, Object>();
+        map = share_userService.userinfo(uid);
+        return map;
+    }
+
     @RequestMapping(value = "/editpw")
     @ResponseBody
     public Map editpw() {

@@ -13,6 +13,9 @@
     values (#{uid,jdbcType=INTEGER}, #{uname,jdbcType=VARCHAR}, #{fid,jdbcType=INTEGER}, 
       #{fname,jdbcType=VARCHAR})
   </insert>
+    <select id="userflow" parameterType="map" resultType="int">
+      call pro_userflow(#{uid,jdbcType=INTEGER},#{fid,jdbcType=INTEGER})
+    </select>
   <insert id="insertSelective" parameterType="com.share.model.share_flow" >
     insert into share_flow
     <trim prefix="(" suffix=")" suffixOverrides="," >
