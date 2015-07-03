@@ -1,7 +1,10 @@
 package com.share.dao;
 
 import com.share.model.share_project;
+import org.springframework.stereotype.Repository;
+import java.util.List;
 
+@Repository
 public interface share_projectMapper {
     int deleteByPrimaryKey(Integer pid);
 
@@ -14,4 +17,6 @@ public interface share_projectMapper {
     int updateByPrimaryKeySelective(share_project record);
 
     int updateByPrimaryKey(share_project record);
+
+    public List<share_project> userPorject_list(Integer uid);
 }

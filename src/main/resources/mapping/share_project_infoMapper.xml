@@ -2,81 +2,117 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.share.dao.share_project_infoMapper" >
   <resultMap id="BaseResultMap" type="com.share.model.share_project_info" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="pi_id" property="piId" jdbcType="INTEGER" />
     <result column="pid" property="pid" jdbcType="INTEGER" />
-    <result column="dayval" property="dayval" jdbcType="REAL" />
-    <result column="weekval" property="weekval" jdbcType="REAL" />
-    <result column="yearval" property="yearval" jdbcType="REAL" />
-    <result column="allval" property="allval" jdbcType="REAL" />
-    <result column="creatime" property="creatime" jdbcType="TIMESTAMP" />
+    <result column="sid" property="sid" jdbcType="VARCHAR" />
+    <result column="sname" property="sname" jdbcType="VARCHAR" />
+    <result column="nowmuch" property="nowmuch" jdbcType="REAL" />
+    <result column="usemuch" property="usemuch" jdbcType="REAL" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="endtime" property="endtime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="isok" property="isok" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, pid, dayval, weekval, yearval, allval, creatime
+    pi_id, pid, sid, sname, nowmuch, usemuch, createtime, endtime, type, isok
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from share_project_info
-    where id = #{id,jdbcType=INTEGER}
+    where pi_id = #{piId,jdbcType=INTEGER}
   </select>
+    <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project_info
+        where pid = #{pid,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectMoneyByPid" resultType="java.lang.Float" parameterType="java.lang.Integer" >
+        select nowmuch
+        from share_project_info
+        where pid = #{pid,jdbcType=INTEGER} AND sid = 'money'
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from share_project_info
-    where id = #{id,jdbcType=INTEGER}
+    where pi_id = #{piId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.share.model.share_project_info" >
-    insert into share_project_info (id, pid, dayval, 
-      weekval, yearval, allval, creatime
-      )
-    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{dayval,jdbcType=REAL}, 
-      #{weekval,jdbcType=REAL}, #{yearval,jdbcType=REAL}, #{allval,jdbcType=REAL}, #{creatime,jdbcType=TIMESTAMP}
-      )
+    insert into share_project_info (pi_id, pid, sid, 
+      sname, nowmuch, usemuch, 
+      createtime, endtime, type, 
+      isok)
+    values (#{piId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{sid,jdbcType=VARCHAR}, 
+      #{sname,jdbcType=VARCHAR}, #{nowmuch,jdbcType=REAL}, #{usemuch,jdbcType=REAL}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{type,jdbcType=TINYINT}, 
+      #{isok,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.share.model.share_project_info" >
+
+    <insert id="insertSelective" parameterType="com.share.model.share_project_info" >
     insert into share_project_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
+      <if test="piId != null" >
+        pi_id,
       </if>
       <if test="pid != null" >
         pid,
       </if>
-      <if test="dayval != null" >
-        dayval,
+      <if test="sid != null" >
+        sid,
       </if>
-      <if test="weekval != null" >
-        weekval,
+      <if test="sname != null" >
+        sname,
       </if>
-      <if test="yearval != null" >
-        yearval,
+      <if test="nowmuch != null" >
+        nowmuch,
       </if>
-      <if test="allval != null" >
-        allval,
+      <if test="usemuch != null" >
+        usemuch,
       </if>
-      <if test="creatime != null" >
-        creatime,
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="endtime != null" >
+        endtime,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="isok != null" >
+        isok,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
+      <if test="piId != null" >
+        #{piId,jdbcType=INTEGER},
       </if>
       <if test="pid != null" >
         #{pid,jdbcType=INTEGER},
       </if>
-      <if test="dayval != null" >
-        #{dayval,jdbcType=REAL},
+      <if test="sid != null" >
+        #{sid,jdbcType=VARCHAR},
       </if>
-      <if test="weekval != null" >
-        #{weekval,jdbcType=REAL},
+      <if test="sname != null" >
+        #{sname,jdbcType=VARCHAR},
       </if>
-      <if test="yearval != null" >
-        #{yearval,jdbcType=REAL},
+      <if test="nowmuch != null" >
+        #{nowmuch,jdbcType=REAL},
       </if>
-      <if test="allval != null" >
-        #{allval,jdbcType=REAL},
+      <if test="usemuch != null" >
+        #{usemuch,jdbcType=REAL},
       </if>
-      <if test="creatime != null" >
-        #{creatime,jdbcType=TIMESTAMP},
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        #{isok,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -86,32 +122,75 @@
       <if test="pid != null" >
         pid = #{pid,jdbcType=INTEGER},
       </if>
-      <if test="dayval != null" >
-        dayval = #{dayval,jdbcType=REAL},
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=VARCHAR},
       </if>
-      <if test="weekval != null" >
-        weekval = #{weekval,jdbcType=REAL},
+      <if test="sname != null" >
+        sname = #{sname,jdbcType=VARCHAR},
       </if>
-      <if test="yearval != null" >
-        yearval = #{yearval,jdbcType=REAL},
+      <if test="nowmuch != null" >
+        nowmuch = #{nowmuch,jdbcType=REAL},
       </if>
-      <if test="allval != null" >
-        allval = #{allval,jdbcType=REAL},
+      <if test="usemuch != null" >
+        usemuch = #{usemuch,jdbcType=REAL},
       </if>
-      <if test="creatime != null" >
-        creatime = #{creatime,jdbcType=TIMESTAMP},
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        endtime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="isok != null" >
+        isok = #{isok,jdbcType=TINYINT},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where pi_id = #{piId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.share.model.share_project_info" >
     update share_project_info
     set pid = #{pid,jdbcType=INTEGER},
-      dayval = #{dayval,jdbcType=REAL},
-      weekval = #{weekval,jdbcType=REAL},
-      yearval = #{yearval,jdbcType=REAL},
-      allval = #{allval,jdbcType=REAL},
-      creatime = #{creatime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+      sid = #{sid,jdbcType=VARCHAR},
+      sname = #{sname,jdbcType=VARCHAR},
+      nowmuch = #{nowmuch,jdbcType=REAL},
+      usemuch = #{usemuch,jdbcType=REAL},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      endtime = #{endtime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=TINYINT},
+      isok = #{isok,jdbcType=TINYINT}
+    where pi_id = #{piId,jdbcType=INTEGER}
   </update>
+
+    <update id="updateMoney" parameterType="com.share.model.share_project_info" >
+        update share_project_info
+            <set >
+            <if test="sid != null" >
+                sid = #{sid,jdbcType=VARCHAR},
+            </if>
+            <if test="sname != null" >
+                sname = #{sname,jdbcType=VARCHAR},
+            </if>
+            <if test="nowmuch != null" >
+                nowmuch = #{nowmuch,jdbcType=REAL},
+            </if>
+            <if test="usemuch != null" >
+                usemuch = #{usemuch,jdbcType=REAL},
+            </if>
+            <if test="createtime != null" >
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endtime != null" >
+                endtime = #{endtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="type != null" >
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="isok != null" >
+                isok = #{isok,jdbcType=TINYINT},
+            </if>
+        </set>
+        where pid = #{pid,jdbcType=INTEGER} and sid = 'money'
+    </update>
 </mapper>

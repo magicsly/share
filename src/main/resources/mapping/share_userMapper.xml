@@ -26,6 +26,12 @@
     from share_user
     where uid = #{uid,jdbcType=INTEGER}
   </select>
+    <select id="selectByUname" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from share_user
+        where uname=#{uname,jdbcType=VARCHAR}
+    </select>
     <select id="userlogin" resultType="int" parameterType="com.share.model.share_user">
         SELECT COUNT(0) FROM share_user where uname=#{uname,jdbcType=VARCHAR} AND password=#{password,jdbcType=VARCHAR}
     </select>

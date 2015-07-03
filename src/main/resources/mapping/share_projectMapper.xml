@@ -10,9 +10,10 @@
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="isok" property="isok" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pid, name, info, image, type, uid, createtime, updatetime
+    pid, name, info, image, type, uid, createtime, updatetime, isok
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -20,6 +21,14 @@
     from share_project
     where pid = #{pid,jdbcType=INTEGER}
   </select>
+
+    <select id="userPorject_list" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project
+        where uid = #{uid,jdbcType=INTEGER}
+    </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from share_project
     where pid = #{pid,jdbcType=INTEGER}
@@ -27,12 +36,12 @@
   <insert id="insert" parameterType="com.share.model.share_project" >
     insert into share_project (pid, name, info, 
       image, type, uid, createtime, 
-      updatetime)
+      updatetime, isok)
     values (#{pid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{updatetime,jdbcType=TIMESTAMP})
+      #{updatetime,jdbcType=TIMESTAMP}, #{isok,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.share.model.share_project" >
+  <insert id="insertSelective" parameterType="com.share.model.share_project" keyProperty="pid" useGeneratedKeys="true">
     insert into share_project
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="pid != null" >
@@ -58,6 +67,9 @@
       </if>
       <if test="updatetime != null" >
         updatetime,
+      </if>
+      <if test="isok != null" >
+        isok,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -85,6 +97,9 @@
       <if test="updatetime != null" >
         #{updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isok != null" >
+        #{isok,jdbcType=TINYINT},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.share.model.share_project" >
@@ -111,6 +126,9 @@
       <if test="updatetime != null" >
         updatetime = #{updatetime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isok != null" >
+        isok = #{isok,jdbcType=TINYINT},
+      </if>
     </set>
     where pid = #{pid,jdbcType=INTEGER}
   </update>
@@ -122,7 +140,8 @@
       type = #{type,jdbcType=INTEGER},
       uid = #{uid,jdbcType=INTEGER},
       createtime = #{createtime,jdbcType=TIMESTAMP},
-      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      isok = #{isok,jdbcType=TINYINT}
     where pid = #{pid,jdbcType=INTEGER}
   </update>
 </mapper>

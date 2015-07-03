@@ -13,6 +13,8 @@ public interface share_userMapper {
 
     share_user selectByPrimaryKey(Integer uid);
 
+    share_user selectByUname(String uname);
+
     int updateByPrimaryKeySelective(share_user record);
 
     int updateByPrimaryKey(share_user record);

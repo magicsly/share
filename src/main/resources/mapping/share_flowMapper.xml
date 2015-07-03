@@ -16,6 +16,21 @@
     <select id="userflow" parameterType="map" resultType="int">
       call pro_userflow(#{uid,jdbcType=INTEGER},#{fid,jdbcType=INTEGER})
     </select>
+
+    <select id="flowinfo" parameterType="int" resultType="map">
+        call pro_flowinfo(#{uid,jdbcType=INTEGER})
+    </select>
+
+    <select id="userflowList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+       SELECT uid,uname FROM share_flow
+        WHERE uid = #{uid,jdbcType=INTEGER}
+    </select>
+
+    <select id="userfansList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT fid,fname FROM share_flow
+        WHERE fid = #{fid,jdbcType=INTEGER}
+    </select>
+
   <insert id="insertSelective" parameterType="com.share.model.share_flow" >
     insert into share_flow
     <trim prefix="(" suffix=")" suffixOverrides="," >

@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import com.share.model.share_user;
 import com.share.service.share_userService;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by ElNino on 15/6/11.
@@ -66,14 +70,24 @@ public class userController {
     @RequestMapping(value = "/login")
     @ResponseBody
     public Map login(@RequestParam(value="uname",defaultValue = "",required=false) String uname,
-                     @RequestParam(value="password",defaultValue = "",required=false) String password
+                     @RequestParam(value="password",defaultValue = "",required=false) String password,
+                     HttpServletRequest request,HttpSession session
                     ){
         share_user share_user = new share_user();
         share_user.setUname(uname);
         share_user.setPassword(password);
-        Integer code = share_userService.login(share_user);
+        Integer code = share_userService.login(share_user,request,session);
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("code",code);
+        return map;
+    }
+
+    @RequestMapping(value = "/errorlogin")
+    @ResponseBody
+    public Map login(){
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code","-1");
+        map.put("msg","用户未登录");
         return map;
     }
 
@@ -106,9 +120,9 @@ public class userController {
 
     @RequestMapping(value = "/userinfo")
     @ResponseBody
-    public Map userinfo(@RequestParam(value="uid",defaultValue = "",required=false) Integer uid) {
+    public Map userinfo() {
         Map<String,Object> map = new HashMap<String, Object>();
-        map = share_userService.userinfo(uid);
+        map = share_userService.userinfo();
         return map;
     }
 
@@ -119,8 +133,5 @@ public class userController {
         Map<String,Object> map = new HashMap<String, Object>();
         return map;
     }
-
-
-
 
 }

@@ -2,22 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.share.dao.share_project_adjMapper" >
   <resultMap id="BaseResultMap" type="com.share.model.share_project_adj" >
-    <result column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pi_id" property="piId" jdbcType="INTEGER" />
     <result column="buymuch" property="buymuch" jdbcType="REAL" />
+    <result column="percent" property="percent" jdbcType="REAL" />
     <result column="buymoney" property="buymoney" jdbcType="REAL" />
     <result column="buytime" property="buytime" jdbcType="TIMESTAMP" />
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="suretime" property="suretime" jdbcType="TIMESTAMP" />
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
+  <sql id="Base_Column_List" >
+    id, pi_id, buymuch, percent, buymoney, buytime, updatetime, suretime, type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share_project_adj
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from share_project_adj
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.share.model.share_project_adj" >
     insert into share_project_adj (id, pi_id, buymuch, 
-      buymoney, buytime, updatetime, 
-      suretime, type)
+      percent, buymoney, buytime, 
+      updatetime, suretime, type
+      )
     values (#{id,jdbcType=INTEGER}, #{piId,jdbcType=INTEGER}, #{buymuch,jdbcType=REAL}, 
-      #{buymoney,jdbcType=REAL}, #{buytime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
-      #{suretime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER})
+      #{percent,jdbcType=REAL}, #{buymoney,jdbcType=REAL}, #{buytime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{suretime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.share.model.share_project_adj" >
     insert into share_project_adj
@@ -30,6 +46,9 @@
       </if>
       <if test="buymuch != null" >
         buymuch,
+      </if>
+      <if test="percent != null" >
+        percent,
       </if>
       <if test="buymoney != null" >
         buymoney,
@@ -57,6 +76,9 @@
       <if test="buymuch != null" >
         #{buymuch,jdbcType=REAL},
       </if>
+      <if test="percent != null" >
+        #{percent,jdbcType=REAL},
+      </if>
       <if test="buymoney != null" >
         #{buymoney,jdbcType=REAL},
       </if>
@@ -74,4 +96,46 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.share.model.share_project_adj" >
+    update share_project_adj
+    <set >
+      <if test="piId != null" >
+        pi_id = #{piId,jdbcType=INTEGER},
+      </if>
+      <if test="buymuch != null" >
+        buymuch = #{buymuch,jdbcType=REAL},
+      </if>
+      <if test="percent != null" >
+        percent = #{percent,jdbcType=REAL},
+      </if>
+      <if test="buymoney != null" >
+        buymoney = #{buymoney,jdbcType=REAL},
+      </if>
+      <if test="buytime != null" >
+        buytime = #{buytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="suretime != null" >
+        suretime = #{suretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.share.model.share_project_adj" >
+    update share_project_adj
+    set pi_id = #{piId,jdbcType=INTEGER},
+      buymuch = #{buymuch,jdbcType=REAL},
+      percent = #{percent,jdbcType=REAL},
+      buymoney = #{buymoney,jdbcType=REAL},
+      buytime = #{buytime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      suretime = #{suretime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

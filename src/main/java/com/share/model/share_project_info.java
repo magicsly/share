@@ -3,26 +3,32 @@ package com.share.model;
 import java.util.Date;
 
 public class share_project_info {
-    private Integer id;
+    private Integer piId;
 
     private Integer pid;
 
-    private Float dayval;
+    private String sid;
 
-    private Float weekval;
+    private String sname;
 
-    private Float yearval;
+    private Float nowmuch;
 
-    private Float allval;
+    private Float usemuch;
 
-    private Date creatime;
+    private Date createtime;
 
-    public Integer getId() {
-        return id;
+    private Date endtime;
+
+    private Byte type;
+
+    private Byte isok;
+
+    public Integer getPiId() {
+        return piId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPiId(Integer piId) {
+        this.piId = piId;
     }
 
     public Integer getPid() {
@@ -33,43 +39,67 @@ public class share_project_info {
         this.pid = pid;
     }
 
-    public Float getDayval() {
-        return dayval;
+    public String getSid() {
+        return sid;
     }
 
-    public void setDayval(Float dayval) {
-        this.dayval = dayval;
+    public void setSid(String sid) {
+        this.sid = sid == null ? null : sid.trim();
     }
 
-    public Float getWeekval() {
-        return weekval;
+    public String getSname() {
+        return sname;
     }
 
-    public void setWeekval(Float weekval) {
-        this.weekval = weekval;
+    public void setSname(String sname) {
+        this.sname = sname == null ? null : sname.trim();
     }
 
-    public Float getYearval() {
-        return yearval;
+    public Float getNowmuch() {
+        return nowmuch;
     }
 
-    public void setYearval(Float yearval) {
-        this.yearval = yearval;
+    public void setNowmuch(Float nowmuch) {
+        this.nowmuch = nowmuch;
     }
 
-    public Float getAllval() {
-        return allval;
+    public Float getUsemuch() {
+        return usemuch;
     }
 
-    public void setAllval(Float allval) {
-        this.allval = allval;
+    public void setUsemuch(Float usemuch) {
+        this.usemuch = usemuch;
     }
 
-    public Date getCreatime() {
-        return creatime;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setCreatime(Date creatime) {
-        this.creatime = creatime;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public Date getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Date endtime) {
+        this.endtime = endtime;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
+    }
+
+    public Byte getIsok() {
+        return isok;
+    }
+
+    public void setIsok(Byte isok) {
+        this.isok = isok;
     }
 }

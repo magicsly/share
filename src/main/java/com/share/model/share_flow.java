@@ -40,4 +40,5 @@ public class share_flow {
     public void setFname(String fname) {
         this.fname = fname == null ? null : fname.trim();
     }
+
 }

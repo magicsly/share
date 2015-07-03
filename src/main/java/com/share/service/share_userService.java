@@ -3,11 +3,18 @@ package com.share.service;
 import com.share.dao.share_userMapper;
 import com.share.model.share_user;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.share.util.util;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
+import javax.servlet.jsp.PageContext;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +24,9 @@ import java.util.Map;
  */
 @Service
 public class share_userService {
+
+    public static final String SESSION_USERNAME = "username";
+    public static final String SESSION_UID = "uid";
 
     @Autowired
     share_userMapper share_userMapper;
@@ -50,12 +60,16 @@ public class share_userService {
         }
     }
 
-    public Integer login(share_user user){
+    public Integer login(share_user user,HttpServletRequest request,HttpSession httpSession){
         try {
             String md5pw =DigestUtils.md5Hex(user.getPassword());
             user.setPassword(md5pw);
             Integer count = share_userMapper.userlogin(user);
             if(count>0){
+                share_user reqUser = new share_user();
+                reqUser = share_userMapper.selectByUname(user.getUname());
+                request.getSession().setAttribute(SESSION_UID,reqUser.getUid());
+                request.getSession().setAttribute(SESSION_USERNAME,user.getUname());
                 return 0;
             }else {
                 return 1;
@@ -65,10 +79,16 @@ public class share_userService {
         }
     }
 
-    public Map userinfo(Integer uid){
+    public boolean userisLogin(HttpServletRequest request){
+        String username = String.valueOf(request.getSession().getAttribute(SESSION_USERNAME));
+        return !username.equals("null");
+    }
+
+    public Map userinfo(){
         Map<String,Object> map = new HashMap<String, Object>();
         try {
-            share_user user = share_userMapper.selectByPrimaryKey(uid);
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            share_user user = share_userMapper.selectByPrimaryKey((Integer)request.getSession().getAttribute(SESSION_UID));
             user.setPassword(null);
             map.put("code",0);
             map.put("info",user);

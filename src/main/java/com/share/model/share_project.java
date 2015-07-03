@@ -3,6 +3,7 @@ package com.share.model;
 import java.util.Date;
 
 public class share_project {
+
     private Integer pid;
 
     private String name;
@@ -18,6 +19,8 @@ public class share_project {
     private Date createtime;
 
     private Date updatetime;
+
+    private Byte isok;
 
     public Integer getPid() {
         return pid;
@@ -81,5 +84,13 @@ public class share_project {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public Byte getIsok() {
+        return isok;
+    }
+
+    public void setIsok(Byte isok) {
+        this.isok = isok;
     }
 }
