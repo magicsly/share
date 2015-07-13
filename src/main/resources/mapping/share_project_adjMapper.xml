@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.share.model.share_project_adj" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pi_id" property="piId" jdbcType="INTEGER" />
+      <result column="adjtimes" property="adjtimes" jdbcType="INTEGER" />
     <result column="buymuch" property="buymuch" jdbcType="REAL" />
     <result column="percent" property="percent" jdbcType="REAL" />
     <result column="buymoney" property="buymoney" jdbcType="REAL" />
@@ -13,25 +14,44 @@
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, pi_id, buymuch, percent, buymoney, buytime, updatetime, suretime, type
+    id, pi_id, adjtimes,buymuch, percent, buymoney, buytime, updatetime, suretime, type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from share_project_adj
     where id = #{id,jdbcType=INTEGER}
   </select>
+    <select id="select_adj_list" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project_adj
+        where type = 0
+    </select>
+    <select id="selectNewAdj" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project_adj
+        order by updatetime limit 0,1
+    </select>
+    <select id="maxTimes" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+        select
+        from share_project_adj as a
+		right join share_project_info as b
+         on a.pi_id = b.pi_id
+         where pid = #{pid,jdbcType=INTEGER}
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from share_project_adj
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.share.model.share_project_adj" >
-    insert into share_project_adj (id, pi_id, buymuch, 
-      percent, buymoney, buytime, 
+    insert into share_project_adj (id, pi_id,adjtimes, buymuch,
+      percent, buymoney, buytime,
       updatetime, suretime, type
       )
-    values (#{id,jdbcType=INTEGER}, #{piId,jdbcType=INTEGER}, #{buymuch,jdbcType=REAL}, 
-      #{percent,jdbcType=REAL}, #{buymoney,jdbcType=REAL}, #{buytime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{piId,jdbcType=INTEGER}, #{adjtimes,jdbcType=INTEGER}, #{buymuch,jdbcType=REAL},
+      #{percent,jdbcType=REAL}, #{buymoney,jdbcType=REAL}, #{buytime,jdbcType=TIMESTAMP},
       #{updatetime,jdbcType=TIMESTAMP}, #{suretime,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}
       )
   </insert>
@@ -44,6 +64,9 @@
       <if test="piId != null" >
         pi_id,
       </if>
+        <if test="adjtimes != null" >
+            adjtimes,
+        </if>
       <if test="buymuch != null" >
         buymuch,
       </if>
@@ -73,6 +96,9 @@
       <if test="piId != null" >
         #{piId,jdbcType=INTEGER},
       </if>
+        <if test="adjtimes != null" >
+            #{adjtimes,jdbcType=INTEGER},
+        </if>
       <if test="buymuch != null" >
         #{buymuch,jdbcType=REAL},
       </if>
@@ -102,6 +128,9 @@
       <if test="piId != null" >
         pi_id = #{piId,jdbcType=INTEGER},
       </if>
+        <if test="adjtimes != null" >
+            adjtimes = #{adjtimes,jdbcType=INTEGER},
+        </if>
       <if test="buymuch != null" >
         buymuch = #{buymuch,jdbcType=REAL},
       </if>
@@ -129,6 +158,7 @@
   <update id="updateByPrimaryKey" parameterType="com.share.model.share_project_adj" >
     update share_project_adj
     set pi_id = #{piId,jdbcType=INTEGER},
+    adjtimes = #{adjtimes,jdbcType=INTEGER},
       buymuch = #{buymuch,jdbcType=REAL},
       percent = #{percent,jdbcType=REAL},
       buymoney = #{buymoney,jdbcType=REAL},

@@ -3,6 +3,8 @@ package com.share.dao;
 import com.share.model.share_project_adj;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface share_project_adjMapper {
     int deleteByPrimaryKey(Integer id);
@@ -13,7 +15,13 @@ public interface share_project_adjMapper {
 
     share_project_adj selectByPrimaryKey(Integer id);
 
+    share_project_adj selectNewAdj();
+
     int updateByPrimaryKeySelective(share_project_adj record);
 
     int updateByPrimaryKey(share_project_adj record);
+
+    int maxTimes(Integer pid);
+
+    public List<share_project_adj> select_adj_list();
 }

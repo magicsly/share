@@ -7,9 +7,13 @@ public class share_project_adj {
 
     private Integer piId;
 
+    private Integer adjtimes;
+
     private Float buymuch;
 
     private Float buymoney;
+
+    private float percent;
 
     private Date buytime;
 
@@ -27,6 +31,14 @@ public class share_project_adj {
         this.id = id;
     }
 
+    public Integer getAdjtimes() {
+        return adjtimes;
+    }
+
+    public void setAdjtimes(Integer adjtimes) {
+        this.adjtimes = adjtimes;
+    }
+
     public Integer getPiId() {
         return piId;
     }
@@ -41,6 +53,14 @@ public class share_project_adj {
 
     public void setBuymuch(Float buymuch) {
         this.buymuch = buymuch;
+    }
+
+    public Float getPercent() {
+        return percent;
+    }
+
+    public void setPercent(Float percent) {
+        this.percent = percent;
     }
 
     public Float getBuymoney() {

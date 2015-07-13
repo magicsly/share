@@ -20,4 +20,9 @@ public class share_project_valueService {
     @Autowired
     share_project_valueMapper share_project_valueMapper;
 
+    public List provalue_list(Integer pid , Integer type){
+        List<share_project_value> share_project_values = share_project_valueMapper.selectByPid(pid);
+        return share_project_values;
+    }
+
 }

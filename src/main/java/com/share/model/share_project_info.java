@@ -15,6 +15,8 @@ public class share_project_info {
 
     private Float usemuch;
 
+    private Float costprice;
+
     private Date createtime;
 
     private Date endtime;
@@ -61,6 +63,14 @@ public class share_project_info {
 
     public void setNowmuch(Float nowmuch) {
         this.nowmuch = nowmuch;
+    }
+
+    public Float getCostprice() {
+        return costprice;
+    }
+
+    public void setCostprice(Float costprice) {
+        this.costprice = costprice;
     }
 
     public Float getUsemuch() {

@@ -14,6 +14,7 @@ import redis.clients.jedis.ShardedJedisPool;
 /**
  * Created by ElNino on 15/7/2.
  */
+@Service
 public class share_project_adjService {
     @Resource
     private ShardedJedisPool shardedJedisPool;
@@ -21,9 +22,56 @@ public class share_project_adjService {
     @Autowired
     share_project_adjMapper share_project_adjMapper;
 
+    /**
+     * 添加方案调整
+     * @param share_project_adj
+     * @return
+     */
     public Integer addProjectAdj(share_project_adj share_project_adj){
         share_project_adjMapper.insertSelective(share_project_adj);
         Integer code = 0;
         return code;
     }
+
+    /**
+     * 更新方案调整
+     * @param share_project_adj
+     * @return
+     */
+    public Integer updateadj(share_project_adj share_project_adj){
+        Integer code =  share_project_adjMapper.updateByPrimaryKey(share_project_adj);
+        return code;
+    }
+
+    /**
+     * 最新方案调整列表
+     * @return
+     */
+    public List projectAdj_list(){
+        List<share_project_adj> shareProjectAdjList = share_project_adjMapper.select_adj_list();
+        return shareProjectAdjList;
+    }
+
+    /**
+     * 获取最新一条方案调整内容
+     * @return
+     */
+    public  share_project_adj getNewAdj(){
+        share_project_adj shareProjectAdj = new share_project_adj();
+        shareProjectAdj = share_project_adjMapper.selectNewAdj();
+        return  shareProjectAdj;
+    }
+
+    /**
+     * 获取该方案调整次数
+     * @param pid
+     * @return
+     */
+    public Integer getMaxTimes(Integer pid){
+        Integer times = share_project_adjMapper.maxTimes(pid);
+        return  times;
+    }
+
+
+
 }

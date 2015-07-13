@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
+
 import com.share.model.share_project;
 import com.share.model.share_project_info;
+import com.share.model.share_project_adj;
+import com.share.model.share_project_value;
 
 
 /**
@@ -27,6 +27,12 @@ public class prjectController {
 
     @Autowired
     com.share.service.share_project_infoService share_project_infoService;
+
+    @Autowired
+    com.share.service.share_project_adjService share_project_adjService;
+
+    @Autowired
+    com.share.service.share_project_valueService share_project_valueService;
 
     @RequestMapping(value = "/addproject")
     @ResponseBody
@@ -68,13 +74,57 @@ public class prjectController {
     @ResponseBody
     public Map addProject_info(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid,
                                 @RequestParam(value="sid",defaultValue = "",required=false) String sid,
-                                @RequestParam(value="size",defaultValue = "",required=false) float size
+                                @RequestParam(value="size",defaultValue = "",required=false) float perecent
     ){
-        share_project_info shareProjectInfo = new share_project_info();
-        shareProjectInfo.setPid(pid);
-        shareProjectInfo.setSid(sid);
-        share_project_infoService.addProjectInfo(shareProjectInfo,size);
         Map<String,Object> map = new HashMap<String, Object>();
+        float nowprice = share_project_infoService.getOnePrice(sid);
+        float buymuch = share_project_infoService.getbuymuch(sid,perecent,pid);
+        Integer code = 0;
+        if(!share_project_infoService.isMoney(pid,buymuch*nowprice)){
+            map.put("code",1);
+        }else{
+            share_project_info shareProjectInfo = new share_project_info();
+            shareProjectInfo.setPid(pid);
+            shareProjectInfo.setSid(sid);
+            Integer piid =  share_project_infoService.addProjectInfo(shareProjectInfo);
+
+            share_project_adj shareProjectAdj = new share_project_adj();
+            shareProjectAdj.setPiId(piid);
+            shareProjectAdj.setBuymuch(perecent);
+            shareProjectAdj.setBuymoney(nowprice);
+            shareProjectAdj.setType(0);
+            shareProjectAdj.setBuytime(new Date());
+            code = share_project_adjService.addProjectAdj(shareProjectAdj);
+            map.put("code",0);
+            map.put("piid",piid);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "/editproadj")
+    @ResponseBody
+    public Map editProject_adj(@RequestParam(value="piid",defaultValue = "",required=false) Integer piid,
+                              @RequestParam(value="pid",defaultValue = "",required=false) Integer pid,
+                               @RequestParam(value="sid",defaultValue = "",required=false) String sid,
+                               @RequestParam(value="perecent",defaultValue = "",required=false) Float perecent
+    ){
+
+        float nowprice = share_project_infoService.getOnePrice(sid);
+        float buymuch = share_project_infoService.getbuymuch(sid,perecent,pid);
+        Integer code = 0;
+        if(!share_project_infoService.isMoney(pid,buymuch*nowprice)){
+            code = 1;
+        }else {
+            share_project_adj shareProjectAdj = new share_project_adj();
+            shareProjectAdj.setPiId(piid);
+            shareProjectAdj.setBuymuch(perecent);
+            shareProjectAdj.setBuymoney(nowprice);
+            shareProjectAdj.setType(0);
+            shareProjectAdj.setBuytime(new Date());
+            code = share_project_adjService.addProjectAdj(shareProjectAdj);
+        }
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code",code);
         return map;
     }
 
@@ -95,7 +145,8 @@ public class prjectController {
         info.put("iswl","12.58");
         info.put("winpeople","99.58");
         info.put("maxback","-18.1");
-        info.put("move","28.6");
+        info.put("move","28");
+        info.put("success","28.6");
         map.put("info",info);
 
         List list=new ArrayList();
@@ -111,8 +162,10 @@ public class prjectController {
         obj2.put("price","13.51");
         obj2.put("wl","15.51");
         list.add(obj2);
-        map.put("list",list);
+        map.put("sharelist",list);
 
+        List valList=share_project_valueService.provalue_list(4,1);
+        map.put("valList",valList);
         return map;
     }
 
@@ -120,7 +173,8 @@ public class prjectController {
     @ResponseBody
     public Map redis(){
 
-        share_project_infoService.test();
+//        share_project_infoService.test();
+        List<share_project_adj> shareProjectAdjList = share_project_adjService.projectAdj_list();
         Map<String,Object> map = new HashMap<String, Object>();
         return map;
     }

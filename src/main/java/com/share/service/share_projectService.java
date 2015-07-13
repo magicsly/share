@@ -7,6 +7,10 @@ import com.share.model.share_project;
 import com.share.dao.share_project_infoMapper;
 import com.share.model.share_project_info;
 
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -19,6 +23,9 @@ public class share_projectService {
 
     @Autowired
     share_projectMapper share_projectMapper;
+
+    @Resource
+    private ShardedJedisPool shardedJedisPool;
 
     @Autowired
     share_project_infoMapper share_project_infoMapper;
@@ -36,6 +43,12 @@ public class share_projectService {
         shareProjectInfo.setType((byte)0);
         shareProjectInfo.setCreatetime(new Date());
         share_project_infoMapper.insertSelective(shareProjectInfo);
+
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        Map<String,String> map = new HashMap<String, String>();
+
+        shardedJedis.hmset("project:"+pid.toString(),map);
+        shardedJedisPool.returnResource(shardedJedis);
         return pid;
     }
 

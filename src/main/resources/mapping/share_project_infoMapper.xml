@@ -8,6 +8,7 @@
     <result column="sname" property="sname" jdbcType="VARCHAR" />
     <result column="nowmuch" property="nowmuch" jdbcType="REAL" />
     <result column="usemuch" property="usemuch" jdbcType="REAL" />
+    <result column="costprice" property="costprice" jdbcType="REAL" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="endtime" property="endtime" jdbcType="TIMESTAMP" />
     <result column="type" property="type" jdbcType="TINYINT" />
@@ -40,16 +41,16 @@
   </delete>
   <insert id="insert" parameterType="com.share.model.share_project_info" >
     insert into share_project_info (pi_id, pid, sid, 
-      sname, nowmuch, usemuch, 
+      sname, nowmuch, usemuch, costprice,
       createtime, endtime, type, 
       isok)
     values (#{piId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{sid,jdbcType=VARCHAR}, 
-      #{sname,jdbcType=VARCHAR}, #{nowmuch,jdbcType=REAL}, #{usemuch,jdbcType=REAL}, 
+      #{sname,jdbcType=VARCHAR}, #{nowmuch,jdbcType=REAL}, #{usemuch,jdbcType=REAL}, #{costprice,jdbcType=REAL},
       #{createtime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, #{type,jdbcType=TINYINT}, 
       #{isok,jdbcType=TINYINT})
   </insert>
 
-    <insert id="insertSelective" parameterType="com.share.model.share_project_info" >
+    <insert id="insertSelective" parameterType="com.share.model.share_project_info"  keyProperty="piId" useGeneratedKeys="true">
     insert into share_project_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="piId != null" >
@@ -69,6 +70,9 @@
       </if>
       <if test="usemuch != null" >
         usemuch,
+      </if>
+      <if test="costprice != null" >
+        costprice,
       </if>
       <if test="createtime != null" >
         createtime,
@@ -102,6 +106,9 @@
       <if test="usemuch != null" >
         #{usemuch,jdbcType=REAL},
       </if>
+      <if test="costprice != null" >
+        #{costprice,jdbcType=REAL},
+      </if>
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -134,6 +141,9 @@
       <if test="usemuch != null" >
         usemuch = #{usemuch,jdbcType=REAL},
       </if>
+        <if test="costprice != null" >
+            costprice = #{costprice,jdbcType=REAL},
+        </if>
       <if test="createtime != null" >
         createtime = #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -156,6 +166,7 @@
       sname = #{sname,jdbcType=VARCHAR},
       nowmuch = #{nowmuch,jdbcType=REAL},
       usemuch = #{usemuch,jdbcType=REAL},
+      costprice = #{costprice ,jdbcType=REAL},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       endtime = #{endtime,jdbcType=TIMESTAMP},
       type = #{type,jdbcType=TINYINT},
@@ -177,6 +188,9 @@
             </if>
             <if test="usemuch != null" >
                 usemuch = #{usemuch,jdbcType=REAL},
+            </if>
+            <if test="costprice != null" >
+                costprice = #{costprice,jdbcType=REAL},
             </if>
             <if test="createtime != null" >
                 createtime = #{createtime,jdbcType=TIMESTAMP},
