@@ -43,24 +43,27 @@ public class projectCron {
     @Resource
     private ShardedJedisPool shardedJedisPool;
 
-    //@Scheduled(fixedDelay = 1000*20)
+    @Scheduled(fixedDelay = 1000*30)
     private void projcetddd(){
 
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         List<share_project_adj> shareProjectAdjList = share_project_adjService.projectAdj_list();
         for(share_project_adj shareProjectAdj : shareProjectAdjList){
-            float buymoney = shareProjectAdj.getBuymoney();
+
+
             float buymuch = shareProjectAdj.getBuymuch();
             Integer piid = shareProjectAdj.getPiId();
             share_project_info shareProjectInfo = new share_project_info();
             shareProjectInfo = share_project_infoService.getOneInfo(piid);
             float infoBuyMuch = shareProjectInfo.getNowmuch();
+            String sid = shareProjectInfo.getSid();
+            float buymoney = share_project_infoService.getOnePrice(sid);
             Integer pid = shareProjectInfo.getPid();
             float infoCostprice = shareProjectInfo.getCostprice();
 
             //更新金额
             float much =  share_project_infoService.getBuyprice(buymoney,buymuch,pid);
-            float money = (much - infoBuyMuch)*buymoney;
+            float money = (infoBuyMuch - much)*buymoney;
             float nowmoney = share_project_infoService.moneyUpdate(pid,money);
 
             //更新方案内容
