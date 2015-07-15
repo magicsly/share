@@ -40,8 +40,13 @@ public class prjectController {
                      @RequestParam(value="info",defaultValue = "",required=false) String info,
                      @RequestParam(value="image",defaultValue = "",required=false) String image,
                      @RequestParam(value="type",defaultValue = "",required=false) Integer type,
+                     @RequestParam(value="str",defaultValue = "",required=false) String str,
                      @RequestParam(value="uid",defaultValue = "",required=false) Integer uid
                      ){
+        str = "sh600169|0.3;sh600168|0.4;sh600176|0.2";
+        //1登录
+        //aop执行
+        //2新建方案
         share_project shareProject=new share_project();
         shareProject.setName(name);
         shareProject.setInfo(info);
@@ -50,6 +55,64 @@ public class prjectController {
         shareProject.setUid(uid);
         shareProject.setIsok((byte)0);
         Integer pid = share_projectService.addProject(shareProject);
+        //3新建现金
+        float money = share_project_infoService.moneyUpdate(pid,(float)1);
+        String[] strArr = str.split(";");
+        for(String sh : strArr){
+            String sid = sh.split("\\|")[0];
+            float precent = Float.parseFloat(sh.split("\\|")[1]);
+            share_project_info shareProjectInfo = new share_project_info();
+            shareProjectInfo.setPid(pid);
+            shareProjectInfo.setSid(sid);
+            shareProjectInfo.setCostprice((float)0);
+            //4新建项目内容（多条）
+            Integer piId = share_project_infoService.addProjectInfo(shareProjectInfo);
+            share_project_adj shareProjectAdj = new share_project_adj();
+            shareProjectAdj.setPiId(piId);
+            shareProjectAdj.setAdjtimes(0);
+            shareProjectAdj.setPercent(precent);
+            //5新建项目调整（对应多条）
+            Integer adjId = share_project_adjService.addProjectAdj(shareProjectAdj);
+        }
+        //调整完成
+        Map<String,Object> map = new HashMap<String, Object>();
+        if(pid>0){
+            map.put("code",0);
+            map.put("pid",pid);
+        }else{
+            map.put("code",-1);
+        }
+        return map;
+    }
+
+
+    @RequestMapping(value = "/editproject")
+    @ResponseBody
+    public Map editProject(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid,
+                          @RequestParam(value="str",defaultValue = "",required=false) String str
+    ){
+        //str = "33|sh600169|0.3;34|sh600168|0.4;-1|sh600160|0.2";
+        String[] strArr = str.split(";");
+        Integer adjtimes = share_project_adjService.getMaxTimes(pid)+1;
+        for(String sh : strArr){
+            Integer piId = Integer.parseInt(sh.split("\\|")[0]);
+            String sid = sh.split("\\|")[1];
+            float precent = Float.parseFloat(sh.split("\\|")[2]);
+            if(piId == -1){
+                share_project_info shareProjectInfo = new share_project_info();
+                shareProjectInfo.setPid(pid);
+                shareProjectInfo.setSid(sid);
+                piId = share_project_infoService.addProjectInfo(shareProjectInfo);
+            }
+            //获取更新次数
+            share_project_adj shareProjectAdj = new share_project_adj();
+            shareProjectAdj.setPiId(piId);
+            shareProjectAdj.setAdjtimes(adjtimes);
+            shareProjectAdj.setPercent(precent);
+            //5新建项目调整（对应多条）
+            Integer adjId = share_project_adjService.addProjectAdj(shareProjectAdj);
+        }
+
         Map<String,Object> map = new HashMap<String, Object>();
         if(pid>0){
             map.put("code",0);
@@ -67,6 +130,36 @@ public class prjectController {
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("code", 0);
         map.put("list", userProject_list);
+        return map;
+    }
+
+    @RequestMapping(value = "/projectinfo_list")
+    @ResponseBody
+    public Map projectInfo_list(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid){
+        List<share_project_info> proInfo_list = share_project_infoService.proInfolist(pid);
+        float val = share_project_infoService.getProMoney(pid);
+        List sharprice = new ArrayList();
+            for(share_project_info shareProjectInfo : proInfo_list){
+            if(!shareProjectInfo.getSid().equals("money")){
+                sharprice.add(shareProjectInfo.getSid()+","+share_project_infoService.getOnePrice(shareProjectInfo.getSid()));
+            }
+        }
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code", 0);
+        map.put("val",val);
+        map.put("list", proInfo_list);
+        map.put("nowprice",sharprice);
+        return map;
+    }
+
+    @RequestMapping(value = "/proadj_list")
+    @ResponseBody
+    public Map proAdj_list(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid){
+
+        List proList = share_project_adjService.getProAdj_list(pid);
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code", 0);
+        map.put("list", proList);
         return map;
     }
 

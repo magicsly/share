@@ -44,14 +44,13 @@ public class projectCron {
     private ShardedJedisPool shardedJedisPool;
 
     @Scheduled(fixedDelay = 1000*30)
-    private void projcetddd(){
+    private void projcetUpdate(){
 
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         List<share_project_adj> shareProjectAdjList = share_project_adjService.projectAdj_list();
         for(share_project_adj shareProjectAdj : shareProjectAdjList){
 
-
-            float buymuch = shareProjectAdj.getBuymuch();
+            float buymuch = shareProjectAdj.getPercent();
             Integer piid = shareProjectAdj.getPiId();
             share_project_info shareProjectInfo = new share_project_info();
             shareProjectInfo = share_project_infoService.getOneInfo(piid);
@@ -74,13 +73,17 @@ public class projectCron {
             share_project_infoService.updateOne(shareProjectInfo);
 
             //更新调仓状态
+            shareProjectAdj.setBuymuch(much);
+            shareProjectAdj.setBuymoney(buymoney);
             shareProjectAdj.setSuretime(new Date());
             shareProjectAdj.setType(9);
             share_project_adjService.updateadj(shareProjectAdj);
 
-
-
         }
         shardedJedisPool.returnResource(shardedJedis);
+    }
+
+    private void projectVal(){
+
     }
 }

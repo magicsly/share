@@ -3,6 +3,7 @@ package com.share.dao;
 import com.share.model.share_project_info;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface share_project_infoMapper {
@@ -23,4 +24,6 @@ public interface share_project_infoMapper {
     float selectMoneyByPid(Integer pid);
 
     int updateMoney(share_project_info record);
+
+    int countByPid(Map map);
 }

@@ -15,7 +15,7 @@
     <result column="isok" property="isok" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pi_id, pid, sid, sname, nowmuch, usemuch, createtime, endtime, type, isok
+    pi_id, pid, sid, sname, nowmuch, usemuch, costprice, createtime, endtime, type, isok
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -28,6 +28,14 @@
         <include refid="Base_Column_List" />
         from share_project_info
         where pid = #{pid,jdbcType=INTEGER}
+    </select>
+
+    <select id="countByPid" resultType="java.lang.Integer" parameterType="map" >
+        select
+          count(0)
+        from share_project_info
+        where pid = #{pid,jdbcType=INTEGER} and sid = #{sid,jdbcType=VARCHAR}
+        and isok = 0
     </select>
 
     <select id="selectMoneyByPid" resultType="java.lang.Float" parameterType="java.lang.Integer" >

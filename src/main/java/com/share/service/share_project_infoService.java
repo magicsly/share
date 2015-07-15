@@ -33,12 +33,25 @@ public class share_project_infoService {
         shareProjectInfo.setSid(sid);
         shareProjectInfo.setPid(pid);
         shareProjectInfo.setSname(sname);
-        shareProjectInfo.setNowmuch((float)0);
+        shareProjectInfo.setNowmuch((float) 0);
         shareProjectInfo.setCreatetime(new Date());
         shareProjectInfo.setType((byte) 0);
+        shareProjectInfo.setIsok((byte) 0);
         share_project_infoMapper.insertSelective(shareProjectInfo);
-        Integer code = 0;
+        Integer code = shareProjectInfo.getPiId();
         return code;
+    }
+
+    public boolean isPorInfo(Integer pid, String sid){
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("pid",pid);
+        map.put("sid",sid);
+        Integer count = share_project_infoMapper.countByPid(map);
+        if(count>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public Integer updateProjectInfo(share_project_info shareProjectInfo){
@@ -72,8 +85,8 @@ public class share_project_infoService {
         redisShareModel.setCode(map.get("code").toString());
         redisShareModel.setLiveprice(Float.parseFloat(map.get("liveprice").toString()));
         redisShareModel.setYesterdayprice(Float.parseFloat(map.get("yesterdayprice").toString()));
-        redisShareModel.setShortchar(map.get("shortchar").toString());
-        redisShareModel.setState(Integer.parseInt(map.get("yesterdayprice").toString()));
+        redisShareModel.setShortchar(map.get("shotchar").toString());
+        redisShareModel.setState(Integer.parseInt(map.get("state").toString()));
         redisShareModel.setUpdatetime(map.get("updatetime").toString());
         shardedJedisPool.returnResource(shardedJedis);
         return redisShareModel;
@@ -117,17 +130,35 @@ public class share_project_infoService {
         return staFlo;
     }
 
+    public List proInfolist(Integer pid){
+        List<share_project_info> proList = share_project_infoMapper.selectByPid(pid);
+        return  proList;
+
+    }
+
     public float moneyUpdate(Integer pid, float money){
-        float nowMoney = share_project_infoMapper.selectMoneyByPid(pid);
-        nowMoney = nowMoney-money;
-        if(nowMoney>0) {
+        try {
+            float nowMoney = share_project_infoMapper.selectMoneyByPid(pid);
+            nowMoney = nowMoney+money;
+            if(nowMoney>0) {
+                share_project_info shareProjectInfo = new share_project_info();
+                shareProjectInfo.setPid(pid);
+                shareProjectInfo.setNowmuch(nowMoney);
+                shareProjectInfo.setUsemuch(nowMoney);
+                share_project_infoMapper.updateMoney(shareProjectInfo);
+            }
+            return nowMoney;
+        }catch (Exception e){
             share_project_info shareProjectInfo = new share_project_info();
             shareProjectInfo.setPid(pid);
-            shareProjectInfo.setNowmuch(nowMoney);
-            shareProjectInfo.setUsemuch(nowMoney);
-            share_project_infoMapper.updateMoney(shareProjectInfo);
+            shareProjectInfo.setSid("money");
+            shareProjectInfo.setSname("money");
+            shareProjectInfo.setCreatetime(new Date());
+            shareProjectInfo.setNowmuch((float)1);
+            shareProjectInfo.setUsemuch((float)1);
+            share_project_infoMapper.insertSelective(shareProjectInfo);
+            return 1;
         }
-        return nowMoney;
     }
 
     public boolean isMoney(Integer pid, float money){

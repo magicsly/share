@@ -19,4 +19,6 @@ public interface share_projectMapper {
     int updateByPrimaryKey(share_project record);
 
     public List<share_project> userPorject_list(Integer uid);
+
+    public List<share_project> selectAllproject();
 }

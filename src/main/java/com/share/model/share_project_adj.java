@@ -1,6 +1,7 @@
 package com.share.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class share_project_adj {
     private Integer id;
@@ -22,6 +23,8 @@ public class share_project_adj {
     private Date suretime;
 
     private Integer type;
+
+    private List<share_project_info> proinfo;
 
     public Integer getId() {
         return id;
@@ -101,5 +104,13 @@ public class share_project_adj {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public List<share_project_info> getProinfo(){
+        return proinfo;
+    }
+
+    public void setProinfo( List<share_project_info> proinfo){
+        this.proinfo = proinfo;
     }
 }

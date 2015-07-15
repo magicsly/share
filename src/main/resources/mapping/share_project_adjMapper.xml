@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.share.model.share_project_adj" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pi_id" property="piId" jdbcType="INTEGER" />
-      <result column="adjtimes" property="adjtimes" jdbcType="INTEGER" />
+    <result column="adjtimes" property="adjtimes" jdbcType="INTEGER" />
     <result column="buymuch" property="buymuch" jdbcType="REAL" />
     <result column="percent" property="percent" jdbcType="REAL" />
     <result column="buymoney" property="buymoney" jdbcType="REAL" />
@@ -13,6 +13,25 @@
     <result column="suretime" property="suretime" jdbcType="TIMESTAMP" />
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
+
+    <resultMap type="com.share.model.share_project_adj" id="adjList">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="pi_id" property="piId" jdbcType="INTEGER" />
+        <result column="adjtimes" property="adjtimes" jdbcType="INTEGER" />
+        <result column="buymuch" property="buymuch" jdbcType="REAL" />
+        <result column="percent" property="percent" jdbcType="REAL" />
+        <result column="buymoney" property="buymoney" jdbcType="REAL" />
+        <result column="buytime" property="buytime" jdbcType="TIMESTAMP" />
+        <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+        <result column="suretime" property="suretime" jdbcType="TIMESTAMP" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <collection ofType="com.share.model.share_project_info" property="proinfo">
+            <id property="id" column="id"/>
+            <result property="sid" column="sid"/>
+            <result property="sname" column="sname"/>
+        </collection>
+    </resultMap>
+
   <sql id="Base_Column_List" >
     id, pi_id, adjtimes,buymuch, percent, buymoney, buytime, updatetime, suretime, type
   </sql>
@@ -26,8 +45,17 @@
         select
         <include refid="Base_Column_List" />
         from share_project_adj
-        where type = 0
+        where type = 0 order by updatetime desc
     </select>
+
+    <select id="selectAdjbuyPid" resultMap="adjList" parameterType="java.lang.Integer">
+         select sid,sname,adjtimes,buymuch, percent, buymoney, buytime, updatetime, suretime
+        from share_project_adj as a
+		left join share_project_info as b
+         on a.pi_id = b.pi_id
+         where b.pid = #{pid,jdbcType=INTEGER} order by updatetime desc
+    </select>
+
     <select id="selectNewAdj" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List" />
@@ -35,11 +63,11 @@
         order by updatetime limit 0,1
     </select>
     <select id="maxTimes" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
-        select
+        select max(adjtimes)
         from share_project_adj as a
 		right join share_project_info as b
          on a.pi_id = b.pi_id
-         where pid = #{pid,jdbcType=INTEGER}
+         where b.pid = #{pid,jdbcType=INTEGER}
     </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from share_project_adj

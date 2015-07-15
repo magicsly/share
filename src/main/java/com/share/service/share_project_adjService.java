@@ -28,8 +28,10 @@ public class share_project_adjService {
      * @return
      */
     public Integer addProjectAdj(share_project_adj share_project_adj){
-        share_project_adjMapper.insertSelective(share_project_adj);
-        Integer code = 0;
+        share_project_adj.setBuytime(new Date());
+        share_project_adj.setUpdatetime(new Date());
+        share_project_adj.setType(0);
+        Integer code = share_project_adjMapper.insertSelective(share_project_adj);
         return code;
     }
 
@@ -39,6 +41,7 @@ public class share_project_adjService {
      * @return
      */
     public Integer updateadj(share_project_adj share_project_adj){
+        share_project_adj.setUpdatetime(new Date());
         Integer code =  share_project_adjMapper.updateByPrimaryKey(share_project_adj);
         return code;
     }
@@ -70,6 +73,11 @@ public class share_project_adjService {
     public Integer getMaxTimes(Integer pid){
         Integer times = share_project_adjMapper.maxTimes(pid);
         return  times;
+    }
+
+    public List getProAdj_list(Integer pid){
+        List proAdj_list = share_project_adjMapper.selectAdjbuyPid(pid);
+        return  proAdj_list;
     }
 
 

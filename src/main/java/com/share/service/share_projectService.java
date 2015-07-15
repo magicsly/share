@@ -33,27 +33,23 @@ public class share_projectService {
     public Integer addProject(share_project shareProject){
         Integer pid = 0;
         shareProject.setCreatetime(new Date());
+        shareProject.setUpdatetime(new Date());
         share_projectMapper.insertSelective(shareProject);
         pid=shareProject.getPid();
-        share_project_info shareProjectInfo = new share_project_info();
-        shareProjectInfo.setPid(pid);
-        shareProjectInfo.setSid("money");
-        shareProjectInfo.setNowmuch((float)1);
-        shareProjectInfo.setUsemuch((float)1);
-        shareProjectInfo.setType((byte)0);
-        shareProjectInfo.setCreatetime(new Date());
-        share_project_infoMapper.insertSelective(shareProjectInfo);
-
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         Map<String,String> map = new HashMap<String, String>();
-
-        shardedJedis.hmset("project:"+pid.toString(),map);
+        //shardedJedis.hmset("project:"+pid.toString(),map);
         shardedJedisPool.returnResource(shardedJedis);
         return pid;
     }
 
     public List userProject_list(Integer uid){
         List<share_project> share_project = share_projectMapper.userPorject_list(uid);
+        return  share_project;
+    }
+
+    public List allProject_list(){
+        List<share_project> share_project = share_projectMapper.selectAllproject();
         return  share_project;
     }
 

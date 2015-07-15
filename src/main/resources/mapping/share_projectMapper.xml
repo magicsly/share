@@ -16,11 +16,18 @@
     pid, name, info, image, type, uid, createtime, updatetime, isok
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from share_project
     where pid = #{pid,jdbcType=INTEGER}
   </select>
+
+    <select id="selectAllproject" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project
+        where isok = 0 order by updatetime
+    </select>
 
     <select id="userPorject_list" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
@@ -34,11 +41,11 @@
     where pid = #{pid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.share.model.share_project" >
-    insert into share_project (pid, name, info, 
-      image, type, uid, createtime, 
+    insert into share_project (pid, name, info,
+      image, type, uid, createtime,
       updatetime, isok)
-    values (#{pid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR}, 
-      #{image,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+    values (#{pid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{info,jdbcType=VARCHAR},
+      #{image,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP},
       #{updatetime,jdbcType=TIMESTAMP}, #{isok,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.share.model.share_project" keyProperty="pid" useGeneratedKeys="true">
