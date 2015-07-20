@@ -43,7 +43,14 @@ public class prjectController {
                      @RequestParam(value="str",defaultValue = "",required=false) String str,
                      @RequestParam(value="uid",defaultValue = "",required=false) Integer uid
                      ){
-        str = "sh600169|0.3;sh600168|0.4;sh600176|0.2";
+
+
+        str = share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3";
+        Random random = new Random();
+        name = "project_"+Math.abs(random.nextInt())%100000;
+        info = "test";
+        uid = Math.abs(random.nextInt())%1000;
+        type = 1;
         //1登录
         //aop执行
         //2新建方案
@@ -163,6 +170,26 @@ public class prjectController {
         return map;
     }
 
+    @RequestMapping(value = "/projectOrderby")
+    @ResponseBody
+    public Map projectOrderby(@RequestParam(value="order",defaultValue = "",required=false) String order){
+
+        List proList = share_projectService.porjectOrderby_list();
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code", 0);
+        map.put("list", proList);
+        return map;
+    }
+
+    @RequestMapping(value = "/projectval_list")
+    @ResponseBody
+    public Map projectVal_list(){
+
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("code", 0);
+        map.put("list", share_projectService.allprojectValRank());
+        return map;
+    }
     @RequestMapping(value = "/addproinfo")
     @ResponseBody
     public Map addProject_info(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid,
@@ -266,9 +293,9 @@ public class prjectController {
     @ResponseBody
     public Map redis(){
 
-//        share_project_infoService.test();
-        List<share_project_adj> shareProjectAdjList = share_project_adjService.projectAdj_list();
+        String str = share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3";
         Map<String,Object> map = new HashMap<String, Object>();
+        map.put("str",str);
         return map;
     }
 }

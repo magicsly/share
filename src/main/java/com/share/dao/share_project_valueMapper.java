@@ -19,4 +19,6 @@ public interface share_project_valueMapper {
     int updateByPrimaryKey(share_project_value record);
 
     public List<share_project_value> selectByPid(Integer pid);
+
+    int selectCount(share_project_value record);
 }

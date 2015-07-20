@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import java.util.Date;
@@ -205,6 +207,36 @@ public class util {
         String nowTime="";
         nowTime= df.format(dt);//用DateFormat的format()方法在dt中获取并以yyyy/MM/dd HH:mm:ss格式显示
         return nowTime;
+    }
+
+    public static Map ConvertObjToMap(Object obj){
+        Map<String,Object> reMap = new HashMap<String,Object>();
+        if (obj == null)
+            return null;
+        Field[] fields = obj.getClass().getDeclaredFields();
+        try {
+            for(int i=0;i<fields.length;i++){
+                try {
+                    Field f = obj.getClass().getDeclaredField(fields[i].getName());
+                    f.setAccessible(true);
+                    Object o = f.get(obj);
+                    reMap.put(fields[i].getName(), o.toString());
+                } catch (NoSuchFieldException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return reMap;
     }
 }
 

@@ -183,12 +183,21 @@ public class share_project_infoService {
         return  code;
     }
 
+    public String getRound(){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        String str = "";
+        str =shardedJedis.srandmember("stocknamelist");
+        float price = getOnePrice(str);
+        shardedJedisPool.returnResource(shardedJedis);
+        return str;
+    }
     public Integer test(){
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         String value = shardedJedis.get("foo");
         shardedJedis.set("user","liuling");
 
         Integer code = 0;
+        shardedJedisPool.returnResource(shardedJedis);
         return code;
     }
 }

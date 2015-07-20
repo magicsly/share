@@ -22,6 +22,12 @@
         from share_project_value
         where pid = #{pid,jdbcType=INTEGER}
     </select>
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.share.model.share_project_value" >
+        select
+        count(0)
+        from share_project_value
+        where pid = #{pid,jdbcType=INTEGER}  and creatime = #{creatime,jdbcType=TIMESTAMP}
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from share_project_value
     where id = #{id,jdbcType=INTEGER}
@@ -65,18 +71,12 @@
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.share.model.share_project_value" >
     update share_project_value
-    <set >
-      <if test="pid != null" >
-        pid = #{pid,jdbcType=INTEGER},
-      </if>
+        <set >
       <if test="dayval != null" >
         dayval = #{dayval,jdbcType=REAL},
       </if>
-      <if test="creatime != null" >
-        creatime = #{creatime,jdbcType=TIMESTAMP},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where pid = #{pid,jdbcType=INTEGER} and creatime = #{creatime,jdbcType=TIMESTAMP}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.share.model.share_project_value" >
     update share_project_value
