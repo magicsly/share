@@ -16,12 +16,21 @@
     from share_project_value
     where id = #{id,jdbcType=INTEGER}
   </select>
+
     <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
         <include refid="Base_Column_List" />
         from share_project_value
         where pid = #{pid,jdbcType=INTEGER}
     </select>
+
+    <select id="selectTodaybyPid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from share_project_value
+        where pid = #{pid,jdbcType=INTEGER} and creatime = date_sub(curdate(),interval 1 day)
+    </select>
+
     <select id="selectCount" resultType="java.lang.Integer" parameterType="com.share.model.share_project_value" >
         select
         count(0)

@@ -130,6 +130,28 @@ public class share_project_infoService {
         return staFlo;
     }
 
+    public float getProVal(Integer pid){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        String str = shardedJedis.hget("projectinfo", pid.toString());
+        String[] strArr = str.split("\\|");
+        float staFlo = 0;
+        if(strArr.length!=0){
+            for (String info : strArr) {
+                String infoSid = info.split(",")[0];
+                float infoNowmuch = Float.parseFloat(info.split(",")[1]);
+                float infoLiveprice = 0;
+                if(infoSid.equals("money")){
+                    infoLiveprice = 1;
+                }else{
+                    infoLiveprice = Float.parseFloat(shardedJedis.hget(infoSid + ":info", "liveprice"));
+                }
+                staFlo = staFlo + (infoLiveprice*infoNowmuch);
+            }
+        }
+        shardedJedisPool.returnResource(shardedJedis);
+        return staFlo;
+    }
+
     public List proInfolist(Integer pid){
         List<share_project_info> proList = share_project_infoMapper.selectByPid(pid);
         return  proList;

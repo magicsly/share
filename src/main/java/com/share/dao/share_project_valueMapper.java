@@ -14,6 +14,8 @@ public interface share_project_valueMapper {
 
     share_project_value selectByPrimaryKey(Integer id);
 
+    share_project_value selectTodaybyPid(Integer pid);
+
     int updateByPrimaryKeySelective(share_project_value record);
 
     int updateByPrimaryKey(share_project_value record);

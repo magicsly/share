@@ -51,4 +51,13 @@ public class share_project_valueService {
         }
     }
 
+    public float yestodayVal(Integer pid){
+        try {
+            float val = share_project_valueMapper.selectTodaybyPid(pid).getDayval();
+            return val;
+        }catch (Exception e){
+            return 1;
+        }
+    }
+
 }

@@ -75,6 +75,10 @@ public class share_project_adjService {
         return  times;
     }
 
+    public Integer getTimesByPid(Integer pid){
+        Integer times = share_project_adjMapper.selectountbuyPid(pid);
+        return  times;
+    }
     public List getProAdj_list(Integer pid){
         List proAdj_list = share_project_adjMapper.selectAdjbuyPid(pid);
         return  proAdj_list;

@@ -23,6 +23,8 @@ public interface share_project_adjMapper {
 
     int maxTimes(Integer pid);
 
+    int selectountbuyPid(Integer pid);
+
     public List<share_project_adj> select_adj_list();
 
     public List<share_project_adj> selectAdjbuyPid(Integer pid);

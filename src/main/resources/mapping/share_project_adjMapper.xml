@@ -56,6 +56,14 @@
          where b.pid = #{pid,jdbcType=INTEGER} order by updatetime desc
     </select>
 
+    <select id="selectountbuyPid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(0)
+        from share_project_adj as a
+        left join share_project_info as b
+        on a.pi_id = b.pi_id
+        where b.pid = #{pid,jdbcType=INTEGER}
+    </select>
+
     <select id="selectNewAdj" resultMap="BaseResultMap" >
         select
         <include refid="Base_Column_List" />

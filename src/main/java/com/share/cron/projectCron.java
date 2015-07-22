@@ -18,6 +18,7 @@ import com.share.model.share_project_value;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -83,12 +85,24 @@ public class projectCron {
                 shareProjectInfo.setUsemuch(infoBuyMuch-much);
                 shareProjectInfo.setCostprice(newCostprice);
                 share_project_infoService.updateOne(shareProjectInfo);
+
                 //更新调仓状态
                 shareProjectAdj.setBuymuch(much);
                 shareProjectAdj.setBuymoney(buymoney);
                 shareProjectAdj.setSuretime(new Date());
                 shareProjectAdj.setType(9);
                 share_project_adjService.updateadj(shareProjectAdj);
+
+                List<share_project_info> shareProjectInfos = share_project_infoService.proInfolist(pid);
+                String str = "";
+                for(share_project_info spi : shareProjectInfos){
+                    String jsid = spi.getSid();
+                    String jmuch = spi.getNowmuch().toString();
+                    str = str + jsid +","+jmuch+"|";
+                }
+                str = str.substring(0,str.length()-1);
+                shardedJedis.hset("projectinfo",pid.toString(),str);
+
             }catch (Exception e){
                 //更新调仓状态
                 shareProjectAdj.setSuretime(new Date());
@@ -101,31 +115,80 @@ public class projectCron {
 
     @Scheduled(fixedDelay = 1000*30)
     private void projectVal() throws ParseException {
+        long aa = System.currentTimeMillis();
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         List<share_project> share_projects = share_projectService.allProject_list();
+
+        System.out.println("获取方案时间"+(System.currentTimeMillis()-aa));
+
+        System.out.println(aa);
         for(share_project sp : share_projects){
             Integer pid = sp.getPid();
-            float val = share_project_infoService.getProMoney(pid);
-            share_project_value shareProjectValue = new share_project_value();
-            shareProjectValue.setPid(pid);
-            shareProjectValue.setDayval(val);
-            share_projectService.updateProject(sp);
-            Integer code = share_project_valueService.addProValue(shareProjectValue);
-            shardedJedis.zadd("valRank",val,sp.getPid().toString());
+            try {
+                float val = share_project_infoService.getProVal(pid);
+//            share_project_value shareProjectValue = new share_project_value();
+//            shareProjectValue.setPid(pid);
+//            shareProjectValue.setDayval(val);
+//            share_projectService.updateProject(sp);
+//            Integer code = share_project_valueService.addProValue(shareProjectValue);
 
-            float index = shardedJedis.zrank("valRank", sp.getPid().toString());
-            float count = shardedJedis.zcard("valRank");
-            float per = (1-(index/count))*100;
-            shardedJedis.hset("project:"+sp.getPid(),"allprofit",val+"");
-            shardedJedis.hset("project:"+sp.getPid(),"allprofitPer",per+"");
+            //净值
+
+                shardedJedis.zadd("valRank",val,sp.getPid().toString());
+                float index = shardedJedis.zrank("valRank", sp.getPid().toString());
+                float count = shardedJedis.zcard("valRank");
+                float per = (1-(index/count))*100;
+                shardedJedis.hset("project:"+pid,"allprofit",val+"");
+                shardedJedis.hset("project:"+pid,"allprofitPer",per+"");
+                System.out.println(System.currentTimeMillis()-aa);
+            }catch (Exception e){
+                System.out.println(pid);
+            }
+
+//            //交易天数
+//            Date creattime = sp.getCreatetime();
+//            Integer saleDays = share_projectService.getProDay(creattime);
+//            shardedJedis.zadd("useday",saleDays,sp.getPid().toString());
+//            index = shardedJedis.zrank("useday", sp.getPid().toString());
+//            count = shardedJedis.zcard("useday");
+//            per = (1-(index/count))*100;
+//            shardedJedis.hset("project:"+pid,"useday",saleDays+"");
+//            shardedJedis.hset("project:"+pid,"usedayPer",per+"");
+//
+//            //日收益
+//            float dayval = share_project_infoService.getProMoney(pid);
+//            float todayval =share_project_valueService.yestodayVal(pid);
+//            float dayprofit = dayval-todayval;
+//            shardedJedis.zadd("dayprofit",dayprofit,sp.getPid().toString());
+//            index = shardedJedis.zrank("dayprofit", sp.getPid().toString());
+//            count = shardedJedis.zcard("dayprofit");
+//            per = (1-(index/count))*100;
+//            shardedJedis.hset("project:"+pid,"dayprofit",saleDays+"");
+//            shardedJedis.hset("project:"+pid,"dayprofitPer",per+"");
+//
+//
+//            //调仓次数
+//            Integer times = share_project_adjService.getTimesByPid(pid);
+//            shardedJedis.zadd("move",times,sp.getPid().toString());
+//            index = shardedJedis.zrank("move", sp.getPid().toString());
+//            count = shardedJedis.zcard("move");
+//            per = (1-(index/count))*100;
+//            shardedJedis.hset("project:"+pid,"move",times+"");
+//            shardedJedis.hset("project:"+pid,"movePer",per+"");
 
         }
+        System.out.println(System.currentTimeMillis()-aa);
         shardedJedisPool.returnResource(shardedJedis);
     }
 
     //@Scheduled(fixedDelay = 1000)
     private void dddd() {
-        util util = new util();
-        String aa = util.sendGet("http://localhost:8080/addproject?name=dddd&info=rrrrr&type=1&uid=4", "gbk");
+        try {
+            util util = new util();
+            String aa = util.sendGet("http://localhost:8080/addproject?name=dddd&info=rrrrr&type=1&uid=4", "gbk");
+        }catch (Exception e){
+            dddd();
+        }
+
     }
 }

@@ -13,6 +13,7 @@ import redis.clients.jedis.ShardedJedisPool;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import com.share.util.util;
 
@@ -99,7 +100,7 @@ public class share_projectService {
     public List porjectOrderby_list(){
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         List pushlist = new ArrayList();
-        Set<String> list = shardedJedis.zrange("valRank",0,9);
+        Set<String> list = shardedJedis.zrange("valRank",50,59);
         for (String str : list) {
             String pid = str;
             Map map =  shardedJedis.hgetAll("project:"+pid);
@@ -107,6 +108,16 @@ public class share_projectService {
         }
         shardedJedisPool.returnResource(shardedJedis);
         return pushlist;
+    }
+
+    public Integer getProDay(Date date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        double d =Float.parseFloat(format.format(date));
+        double n =Float.parseFloat(format.format(new Date()));
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        float day = shardedJedis.zcount("stockisopen", d, n);
+        shardedJedisPool.returnResource(shardedJedis);
+        return (int) day;
     }
 
 }

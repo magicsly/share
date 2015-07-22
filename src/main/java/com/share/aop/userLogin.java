@@ -34,8 +34,8 @@ public class userLogin {
             "execution(* com.share.service.share_userService.editUser(..))")
     public void isLogin() {}
 
-    @After("isLogin()")
-    public void after(JoinPoint joinPoint) throws IOException {
+    @Before("isLogin()")
+    public void before(JoinPoint joinPoint) throws IOException {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         if(!share_userService.userisLogin(request)) {
