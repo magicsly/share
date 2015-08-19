@@ -1,5 +1,8 @@
 package com.share.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import org.aspectj.apache.bcel.classfile.Code;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import com.share.model.share_project;
 import com.share.model.share_project_info;
 import com.share.model.share_project_adj;
 import com.share.model.share_project_value;
+import com.share.model.share_user;
 
 
 /**
@@ -34,6 +38,9 @@ public class prjectController {
     @Autowired
     com.share.service.share_project_valueService share_project_valueService;
 
+    @Autowired
+    com.share.service.share_userService share_userService;
+
     @RequestMapping(value = "/addproject")
     @ResponseBody
     public Map addProject(@RequestParam(value="name",defaultValue = "",required=false) String name,
@@ -45,11 +52,11 @@ public class prjectController {
                      ){
 
 
-        str = share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3";
-        Random random = new Random();
-        name = "project_"+Math.abs(random.nextInt())%100000;
-        info = "test";
-        uid = Math.abs(random.nextInt())%1000;
+//        str = share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3";
+//        Random random = new Random();
+//        name = "project_"+Math.abs(random.nextInt())%100000;
+//        info = "test";
+//        uid = Math.abs(random.nextInt())%1000;
         type = 1;
         //1登录
         //aop执行
@@ -93,12 +100,13 @@ public class prjectController {
     }
 
 
+
     @RequestMapping(value = "/editproject")
     @ResponseBody
     public Map editProject(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid,
                           @RequestParam(value="str",defaultValue = "",required=false) String str
     ){
-        //str = "33|sh600169|0.3;34|sh600168|0.4;-1|sh600160|0.2";
+            //str = "33|sh600169|0.3;34|sh600168|0.4;-1|sh600160|0.2";
         String[] strArr = str.split(";");
         Integer adjtimes = share_project_adjService.getMaxTimes(pid)+1;
         for(String sh : strArr){
@@ -253,47 +261,72 @@ public class prjectController {
     public Map project_info(@RequestParam(value="pid",defaultValue = "",required=false) Integer pid){
 
         Map<String,Object> map = new HashMap<String, Object>();
+        try {
+            map.put("code",0);
+
+            share_project shareProject = share_projectService.getproInfo(pid);
+            Map<String,Object> info = new HashMap<String, Object>();
+            info.put("id",shareProject.getPid());
+            info.put("name",shareProject.getName());
+            info.put("info",shareProject.getInfo());
+            info.put("follow",106);
+
+            info.put("userimg",share_userService.getone(shareProject.getUid()).getImage());
+            info.put("username",share_userService.getone(shareProject.getUid()).getUname());
+
+
+            Map redisMap = share_projectService.getReisInfo(pid);
+            info.put("creattime",redisMap.get("createtime"));
+            info.put("updatetime",redisMap.get("updatetime"));
+            info.put("yearprofit",redisMap.get("yearprofit"));
+            info.put("yearprofitPer",redisMap.get("yearprofitPer"));
+            info.put("iswl",redisMap.get("iswl"));
+            info.put("iswlPer",redisMap.get("iswlPer"));
+            info.put("useday",redisMap.get("useday"));
+            info.put("usedayPer",redisMap.get("usedayPer"));
+            info.put("allprofit",redisMap.get("allprofit"));
+            info.put("allprofitPer",redisMap.get("allprofitPer"));
+            info.put("dayprofit",redisMap.get("dayprofit"));
+            info.put("dayprofitPer",redisMap.get("dayprofitPer"));
+            info.put("maxDrawDown",redisMap.get("maxDrawDown"));
+            info.put("maxDrawDownPer",redisMap.get("maxDrawDownPer"));
+            info.put("move",redisMap.get("move"));
+            info.put("movePer",redisMap.get("movePer"));
+            info.put("success",redisMap.get("success"));
+            info.put("successPer",redisMap.get("successPer"));
+
+            map.put("info",info);
+
+            List list=new ArrayList();
+            list = share_project_infoService.getRedisInfoList(pid);
+            map.put("sharelist",list);
+
+            List valList=share_project_valueService.provalue_list(pid,1);
+            map.put("valList",valList);
+            return map;
+        }catch (Exception e){
+            map.put("code","-1");
+            map.put("msg","方案错误");
+            return map;
+        }
+    }
+
+    @RequestMapping(value = "/getsid")
+    @ResponseBody
+    public Map getSid(@RequestParam(value="sname",defaultValue = "",required=false) String sname){
+        Map<String,Object> map = new HashMap<String, Object>();
         map.put("code",0);
-
-        Map<String,Object> info = new HashMap<String, Object>();
-        info.put("name","西格玛粒子投资");
-        info.put("info","面对锋范复杂的市场，我们的目标就是不亏钱");
-        info.put("useday","253");
-        info.put("yearprofit","56.96");
-        info.put("allprofit","72.53");
-        info.put("dayprofit","1.53");
-        info.put("iswl","12.58");
-        info.put("winpeople","99.58");
-        info.put("maxback","-18.1");
-        info.put("move","28");
-        info.put("success","28.6");
-        map.put("info",info);
-
         List list=new ArrayList();
-        Map<String,Object> obj = new HashMap<String, Object>();
-        obj.put("name","光明牛奶");
-        obj.put("precent","15.5");
-        obj.put("price","20.51");
-        obj.put("wl","15.51");
-        list.add(obj);
-        Map<String,Object> obj2 = new HashMap<String, Object>();
-        obj2.put("name","中国核电");
-        obj2.put("precent","17.5");
-        obj2.put("price","13.51");
-        obj2.put("wl","15.51");
-        list.add(obj2);
-        map.put("sharelist",list);
-
-        List valList=share_project_valueService.provalue_list(4,1);
-        map.put("valList",valList);
+        list = share_project_infoService.searchstock(sname);
+        map.put("list",list);
         return map;
     }
+
 
     @RequestMapping(value = "/redis")
     @ResponseBody
     public Map redis(){
-
-        String str = share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3"+";"+share_project_infoService.getRound()+"|"+"0.3";
+        float str = share_project_valueService.maxBack(99);
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("str",str);
         return map;

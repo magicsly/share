@@ -3,6 +3,7 @@ package com.share.dao;
 import com.share.model.share_project_value;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface share_project_valueMapper {
@@ -23,4 +24,6 @@ public interface share_project_valueMapper {
     public List<share_project_value> selectByPid(Integer pid);
 
     int selectCount(share_project_value record);
+
+    Map maxmin (Integer pid);
 }

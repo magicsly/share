@@ -8,6 +8,8 @@ import com.share.model.redis_shareModel;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
@@ -130,9 +132,23 @@ public class share_project_infoService {
         return staFlo;
     }
 
+    public Map getProValList(Integer pid){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        Map map = shardedJedis.hgetAll("projectinfo");
+        shardedJedisPool.returnResource(shardedJedis);
+        return map;
+    }
+
     public float getProVal(Integer pid){
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
-        String str = shardedJedis.hget("projectinfo", pid.toString());
+        String str = null;
+        try {
+            str = shardedJedis.hget("projectinfo", pid.toString());
+
+        }catch (Exception e){
+            System.out.println("redis error");
+        }
+
         String[] strArr = str.split("\\|");
         float staFlo = 0;
         if(strArr.length!=0){
@@ -155,7 +171,41 @@ public class share_project_infoService {
     public List proInfolist(Integer pid){
         List<share_project_info> proList = share_project_infoMapper.selectByPid(pid);
         return  proList;
+    }
 
+    public List getRedisInfoList(Integer pid){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        List list=new ArrayList();
+        List<share_project_info> proList = share_project_infoMapper.selectByPid(pid);
+        float staFlo = 0;
+        if(proList.size()!=0) {
+            for (share_project_info info : proList) {
+                Map<String,Object> obj = new HashMap<String, Object>();
+                String sid = info.getSid();
+                String sname= info.getSname();
+                float costprice = 0;
+                float liveprice = 0;
+                float precent = info.getNowmuch();
+                if(sid.equals("money")){
+                    costprice = 1;
+                    liveprice = 1;
+                }else{
+                    costprice = info.getCostprice();
+                    liveprice = this.getOnePrice(sid);
+                }
+                obj.put("symbol",sid);
+                obj.put("name",sname);
+                obj.put("costprice",costprice);
+                obj.put("nowprice",liveprice);
+                obj.put("targetprice",88.88);
+                obj.put("precent",precent);
+                //float
+                list.add(obj);
+            }
+        }
+
+        shardedJedisPool.returnResource(shardedJedis);
+        return list;
     }
 
     public float moneyUpdate(Integer pid, float money){
@@ -221,5 +271,31 @@ public class share_project_infoService {
         Integer code = 0;
         shardedJedisPool.returnResource(shardedJedis);
         return code;
+    }
+
+    public ArrayList searchstock(String str) {
+        System.out.println("serach.....");
+        ShardedJedis j = shardedJedisPool.getResource();
+        Set<String> list = j.smembers("stocknamelist");
+        int num = 0;
+        ArrayList retlist = new ArrayList();
+        for (String s : list) {
+            Map<String, String> x = j.hgetAll(s + ":info");
+            Pattern pattern = Pattern.compile("^" + str + ".*");
+            Matcher matcher = pattern.matcher(x.get("code"));
+            Matcher matcher2 = pattern.matcher(x.get("shotchar"));
+            if ((matcher.matches() || matcher2.matches())) {
+                if(x.get("liveprice") != null){
+                    retlist.add(x);
+                    num++;
+                }
+            }
+            if (num >= 5) {
+                break;
+            }
+        }
+
+        shardedJedisPool.returnResource(j);
+        return retlist;
     }
 }

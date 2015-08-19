@@ -39,7 +39,7 @@ public class userLogin {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         if(!share_userService.userisLogin(request)) {
-            response.sendRedirect("/errorlogin");
+            response.sendRedirect("/share/errorlogin");
             return;
         }
     }

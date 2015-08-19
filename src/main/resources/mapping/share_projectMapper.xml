@@ -22,7 +22,7 @@
     where pid = #{pid,jdbcType=INTEGER}
   </select>
 
-    <select id="selectAllproject" resultMap="BaseResultMap" >
+    <select id="selectAllproject" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from share_project

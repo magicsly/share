@@ -18,6 +18,7 @@ import javax.servlet.jsp.PageContext;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by ElNino on 15/6/15.
@@ -36,7 +37,15 @@ public class share_userService {
     public Integer regist(share_user user){
         try {
             Integer code = confUser(user,0);
+            code = 0;
             if(code == 0){
+                String[] img ={"aaa","bbb","bbb","bbb","bbb","bbb","bbb","bbb","bbb","bbb"};
+                Integer imglen = img.length+1;
+                Random random = new Random();
+                Integer a = Math.abs(random.nextInt())%imglen;
+                String imgurl = img[a-1];
+
+                user.setPassword("123456");
                 String md5pw =DigestUtils.md5Hex(user.getPassword());
                 user.setPassword(md5pw);
                 user.setCreatime(new Date());
@@ -151,5 +160,17 @@ public class share_userService {
 
         }
         return msg;
+    }
+    public share_user getone(Integer uid){
+
+        share_user shareUser = share_userMapper.selectByPrimaryKey(uid);
+        if(shareUser == null) {
+            shareUser = new share_user();
+            shareUser.setUname("测试用户");
+            shareUser.setImage("/aaaa");
+        }
+
+        return shareUser;
+
     }
 }

@@ -1,12 +1,15 @@
 package com.share.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import com.share.dao.share_projectMapper;
 import com.share.model.share_project;
 import com.share.dao.share_project_infoMapper;
 import com.share.model.share_project_info;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
@@ -15,6 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.share.util.util;
 
 /**
@@ -32,9 +38,13 @@ public class share_projectService {
     @Autowired
     share_project_infoMapper share_project_infoMapper;
 
+
     util util = new util();
     public Integer addProject(share_project shareProject){
         Integer pid = 0;
+        Integer uid = (Integer)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("uid");
+        String uname = (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("uname");
+        shareProject.setUid(uid);
         shareProject.setCreatetime(new Date());
         shareProject.setUpdatetime(new Date());
         share_projectMapper.insertSelective(shareProject);
@@ -43,6 +53,9 @@ public class share_projectService {
         ShardedJedis shardedJedis = shardedJedisPool.getResource();
         Map<String,String> map = new HashMap<String, String>();
         map = com.share.util.util.ConvertObjToMap(shareProject);
+        map.put("createtime", com.share.util.util.nowTime());
+        map.put("upadatetime", com.share.util.util.nowTime());
+        map.put("username",uname);
         map.put("yearprofit","0");
         map.put("yearprofitPer","0");
 
@@ -70,6 +83,17 @@ public class share_projectService {
         shardedJedisPool.returnResource(shardedJedis);
 
         return pid;
+    }
+
+    public Map getReisInfo(Integer pid){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
+        Map map = shardedJedis.hgetAll("project:"+pid);
+        shardedJedisPool.returnResource(shardedJedis);
+        return map;
+    }
+    public share_project getproInfo(Integer pid){
+        share_project shareProject = share_projectMapper.selectByPrimaryKey(pid);
+        return shareProject;
     }
 
     public Integer updateProject(share_project shareProject){
@@ -118,6 +142,8 @@ public class share_projectService {
         float day = shardedJedis.zcount("stockisopen", d, n);
         shardedJedisPool.returnResource(shardedJedis);
         return (int) day;
+
     }
+
 
 }

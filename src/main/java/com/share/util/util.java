@@ -209,6 +209,13 @@ public class util {
         return nowTime;
     }
 
+    public static String toTimeString(Date dt){
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置显示格式
+        String nowTime="";
+        nowTime= df.format(dt);//用DateFormat的format()方法在dt中获取并以yyyy/MM/dd HH:mm:ss格式显示
+        return nowTime;
+    }
+
     public static Map ConvertObjToMap(Object obj){
         Map<String,Object> reMap = new HashMap<String,Object>();
         if (obj == null)

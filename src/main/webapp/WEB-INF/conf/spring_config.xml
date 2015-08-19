@@ -95,38 +95,7 @@
         <property name="basePackage" value="com.share.dao"/>
     </bean>
 
-    <task:annotation-driven/>
 
-    <!--<bean id="propertyConfigurerRedis" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
-        <!--<property name="order" value="1" />-->
-        <!--<property name="ignoreUnresolvablePlaceholders" value="true" />-->
-        <!--<property name="locations">-->
-            <!--<list>-->
-                <!--<value>classpath:/redis-manager-config.properties</value>-->
-            <!--</list>-->
-        <!--</property>-->
-    <!--</bean>-->
-
-    <!--&lt;!&ndash; jedis pool配置 &ndash;&gt;-->
-    <!--<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">-->
-        <!--<property name="maxIdle" value="${redis.maxIdle}" />-->
-        <!--<property name="testOnBorrow" value="${redis.testOnBorrow}" />-->
-        <!--<property name="maxTotal" value="50" />-->
-        <!--<property name="maxWaitMillis" value="1" />-->
-        <!--<property name="minEvictableIdleTimeMillis" value="1000" />-->
-    <!--</bean>-->
-
-    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
-        <!--<constructor-arg index="0" ref="jedisPoolConfig"/>-->
-        <!--<constructor-arg index="1">-->
-            <!--<list>-->
-                <!--<bean id="jedisShardInfo" class="redis.clients.jedis.JedisShardInfo">-->
-                    <!--<constructor-arg index="0" value="${redis.host}"/>-->
-                    <!--<constructor-arg index="1" value="${redis.port}"/>-->
-                <!--</bean>-->
-            <!--</list>-->
-        <!--</constructor-arg>-->
-    <!--</bean>-->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxTotal" value="50" />    <!--最大连接数-->
         <property name="maxIdle" value="10" />     <!--最大空闲数-->
@@ -135,7 +104,7 @@
         <property name="minEvictableIdleTimeMillis" value="1000"/>
     </bean>
     <bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="192.168.10.111" />
+        <constructor-arg index="0" value="127.0.0.1" />
         <constructor-arg index="1" value="6379" />
     </bean>
     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
@@ -146,4 +115,26 @@
             </list>
         </constructor-arg>
     </bean>
+
+    <bean id="threadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数 -->
+        <property name="corePoolSize" value="50" />
+        <!-- 最大线程数 -->
+        <property name="maxPoolSize" value="50" />
+        <!-- 队列最大长度 -->
+        <property name="queueCapacity" value="1000" />
+        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+        <property name="keepAliveSeconds" value="60" />
+
+
+        <!--<property name="rejectedExecutionHandler">-->
+            <!--<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy"></bean>-->
+        <!--</property>-->
+    </bean>
+
+
+    <task:annotation-driven/>
+
+
+
 </beans>
